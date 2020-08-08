@@ -1,11 +1,5 @@
-import cn.itcast.travel.dao.CategoryDao;
-import cn.itcast.travel.dao.RouteDao;
-import cn.itcast.travel.dao.RouteImgDao;
-import cn.itcast.travel.dao.SellerDao;
-import cn.itcast.travel.dao.impl.CategoryDaoImpl;
-import cn.itcast.travel.dao.impl.RouteDaoImpl;
-import cn.itcast.travel.dao.impl.RouteImgDaoImpl;
-import cn.itcast.travel.dao.impl.SellerDaoImpl;
+import cn.itcast.travel.dao.*;
+import cn.itcast.travel.dao.impl.*;
 import cn.itcast.travel.domain.Category;
 import cn.itcast.travel.service.impl.CategoryServiceImpl;
 import cn.itcast.travel.util.JDBCUtils;
@@ -18,7 +12,9 @@ import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -31,8 +27,8 @@ public class test {
 
     @Test
     public void test2() {
-        String content = "<a href='http://localhost:80/travel/ActivationServlet?code="+"8c68c8ececef438ea8282902602ab67d"+"'>点击该处激活你的用户</a>";
-        MailUtils.sendMail("2569677439@qq.com",content,"激活邮件");
+        String content = "<a href='http://localhost:80/travel/ActivationServlet?code=" + "8c68c8ececef438ea8282902602ab67d" + "'>点击该处激活你的用户</a>";
+        MailUtils.sendMail("2569677439@qq.com", content, "激活邮件");
     }
 
     @Test
@@ -52,7 +48,7 @@ public class test {
     @Test
     public void test4() {
         Jedis jedis = JedisUtil.getJedis();
-        jedis.set("momo","alice");
+        jedis.set("momo", "alice");
         System.out.println(jedis.get("momo"));
     }
 
@@ -86,7 +82,7 @@ public class test {
     @Test
     public void test6() {
         String s = null;
-        if(s.length() > 0 ){
+        if (s.length() > 0) {
             System.out.println("momo");
         }
     }
@@ -108,5 +104,18 @@ public class test {
     public void test9() {
         SellerDao sellerDao = new SellerDaoImpl();
         System.out.println(sellerDao.findBySeller(1));
+    }
+
+    @Test
+    public void test10() {
+        FavoriteDao favoriteDao = new FavoriteDaoImpl();
+        System.out.println(favoriteDao.findCountByRid(8));
+    }
+
+    @Test
+    public void test11() {
+        Date date = new Date();
+        SimpleDateFormat SDF = new SimpleDateFormat("yyyy年-MM月-dd日 HH时:mm分:ss秒 ");
+        System.out.println(SDF.format(date));
     }
 }

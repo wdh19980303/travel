@@ -2,7 +2,10 @@ package cn.itcast.travel.web.servlet;
 
 import cn.itcast.travel.domain.PageBean;
 import cn.itcast.travel.domain.Route;
+import cn.itcast.travel.domain.User;
+import cn.itcast.travel.service.FavoriteService;
 import cn.itcast.travel.service.RouteService;
+import cn.itcast.travel.service.impl.FavoriteServiceImpl;
 import cn.itcast.travel.service.impl.RouteServiceImpl;
 
 import javax.servlet.ServletException;
@@ -14,8 +17,12 @@ import java.io.IOException;
 @WebServlet("/route/*")
 public class RouteServlet extends BaseServlet {
 
-    private RouteService service = new RouteServiceImpl();
+    private RouteService routeService = new RouteServiceImpl();
+    private FavoriteService favoriteService = new FavoriteServiceImpl();
 
+
+
+    // 分页
     public void pageQuery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 接收分页参数
         String currentPageStr = request.getParameter("currentPage");
@@ -52,7 +59,7 @@ public class RouteServlet extends BaseServlet {
         }
 
         // 调用service
-        PageBean<Route> route = service.pageQuery(cid, currentPage, pageSize, rname);
+        PageBean<Route> route = routeService.pageQuery(cid, currentPage, pageSize, rname);
         writeValue(route, response);
 
     }
@@ -62,9 +69,50 @@ public class RouteServlet extends BaseServlet {
         // 1 接收rid
         int rid = Integer.parseInt(request.getParameter("rid"));
         // 2 调用service查询
-        Route route = service.completeRoute(rid);
+        Route route = routeService.completeRoute(rid);
 
         // 3 转为json对象写回页面
         writeValue(route, response);
     }
+
+    // 判断当前登录用户是否收藏过该路线
+    public void isFavorite(HttpServletRequest request, HttpServletResponse response) throws Exception, ServletException {
+        // 获取路线的rid
+        String rid = request.getParameter("rid");
+        // 获取之前的用户信息
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+        int uid;
+        if (loginUser == null) {
+            // 用户为空
+            uid = 0;
+        } else {
+            uid = loginUser.getUid();
+        }
+
+        // 调用service查询
+
+        boolean flag = favoriteService.isFavorite(Integer.parseInt(rid), uid);
+        writeValue(flag,response);
+    }
+
+    // 添加收藏
+    public void addFavorite(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String ridStr = request.getParameter("rid");
+        int rid ;
+        if (ridStr != null && ridStr.length() > 0 && !ridStr.equals("null")) {
+             rid = Integer.parseInt(ridStr);
+        } else {
+            return;
+        }
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+        if(loginUser == null) {
+            return;
+        }
+
+        favoriteService.addFavorite(rid, loginUser.getUid());
+
+
+    }
+
+
 }

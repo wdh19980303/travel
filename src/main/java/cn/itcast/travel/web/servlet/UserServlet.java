@@ -116,7 +116,7 @@ public class UserServlet extends BaseServlet {
             return;
         }
 
-        request.getSession().setAttribute("loginUser", service.getUser(username).getName());
+        request.getSession().setAttribute("loginUser", service.getUser(username));
         service.sendMsg(response, true, "登录成功", null);
 
     }
@@ -135,7 +135,13 @@ public class UserServlet extends BaseServlet {
         response.setContentType("text/html;charset=utf-8");
         // 正式代码
 //        System.out.println(request.getSession().getAttribute("loginUser"));
-        String json = new ObjectMapper().writeValueAsString(request.getSession().getAttribute("loginUser"));
+        User loginUser = (User) request.getSession().getAttribute("loginUser");
+        if(loginUser == null) {
+            writeValue(null,response);
+            return;
+        }
+        String json = new ObjectMapper().writeValueAsString(loginUser.getName());
+
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(json);
     }

@@ -4,6 +4,9 @@ $(function () {
         if (data != null) {
             var msg = "欢迎" + data
             $("#span_username").html(msg)
+            $("#login_out_status").hide()
+        } else {
+            $("#login_status").hide()
         }
     })
 
