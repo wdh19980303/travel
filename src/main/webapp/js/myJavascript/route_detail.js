@@ -122,10 +122,12 @@ $("#btn_favorite").click(function () {
             alert("请登录后再收藏吧")
             return
         } else {
-            $.post("route/addFavorite", {rid: rid}, function () {
+            $.post("route/addFavorite", {rid: rid}, function (route) {
                 $("#btn_favorite").addClass("already")
-                $("#btn_favorite").attr("disabled",true).css("pointer-events","none");
+                $("#btn_favorite").attr("disabled","disabled").css("pointer-events","none");
                 $("#btn_favorite").text("已收藏")
+                $("#count_favorite").html("已收藏" + route.count + "次")
+
             })
         }
     })

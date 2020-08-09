@@ -21,7 +21,6 @@ public class RouteServlet extends BaseServlet {
     private FavoriteService favoriteService = new FavoriteServiceImpl();
 
 
-
     // 分页
     public void pageQuery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 接收分页参数
@@ -36,10 +35,10 @@ public class RouteServlet extends BaseServlet {
             rname = null;
         }
 
-        System.out.println("rname :_" + rname);
+        /*System.out.println("rname :_" + rname);
         System.out.println("current:_" + currentPageStr);
         System.out.println("cid :_" + cidStr);
-        System.out.println("pageSize :_" + pageSizeStr);
+        System.out.println("pageSize :_" + pageSizeStr);*/
 
         // 处理参数
         int cid = 0;
@@ -92,24 +91,26 @@ public class RouteServlet extends BaseServlet {
         // 调用service查询
 
         boolean flag = favoriteService.isFavorite(Integer.parseInt(rid), uid);
-        writeValue(flag,response);
+        writeValue(flag, response);
     }
 
     // 添加收藏
     public void addFavorite(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ridStr = request.getParameter("rid");
-        int rid ;
+        int rid;
         if (ridStr != null && ridStr.length() > 0 && !ridStr.equals("null")) {
-             rid = Integer.parseInt(ridStr);
+            rid = Integer.parseInt(ridStr);
         } else {
             return;
         }
         User loginUser = (User) request.getSession().getAttribute("loginUser");
-        if(loginUser == null) {
+        if (loginUser == null) {
             return;
         }
 
         favoriteService.addFavorite(rid, loginUser.getUid());
+
+        routeQuery(request,response);
 
 
     }

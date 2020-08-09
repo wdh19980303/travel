@@ -6,7 +6,7 @@ $(function () {
     }
 
     // 当页面加载完成后
-    pageLoad(cid, null, rname)
+    pageLoad(cid, 1, rname)
 })
 
 
